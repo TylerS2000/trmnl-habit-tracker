@@ -16,7 +16,7 @@
   },
   "scripts":{
     "build": "npx tsc",
-    "serve": "node dist/index.js"
+    "serve": "node --env-file=.env dist/index.js"
   },
   "homepage": "https://github.com/TylerS2000/trmnl-habit-tracker#readme",
   "devDependencies": {
