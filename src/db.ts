@@ -2,7 +2,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from './types/database.types';
 
 export class supabaseDB {
-    supabaseUrl: string;ß
+    supabaseUrl: string;
     supabaseKey: string;
     supabaseClient: SupabaseClient;
 

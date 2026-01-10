@@ -11,15 +11,15 @@ const dbClient = new supabaseDB(process.env.DATABASE_URL, process.env.DATABASE_P
 app.use(authorizeRequest)
 
 //Register Endpoints
-app.get('/:id', (req, res) => {
-    let data
-    try {
-        const dbResponse = dbClient.grabHabitDataById(req.params.id).then((response => { data = response.data }))
-        console.log(dbResponse)
-    } catch (e) {
-        throw e
-    }
+app.get('/:id', async (req, res) => {
 
+    const {data, error}= await dbClient.grabHabitDataById(req.params.id)
+
+    if(error){
+        console.error('Supabase Error:', error)
+        return res.status(500).send(error.message)
+    }
+    
     res.send(
         data
     )
