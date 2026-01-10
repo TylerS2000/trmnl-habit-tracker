@@ -7,6 +7,11 @@ const port = process.env.PORT || 4000
 
 const dbClient = new supabaseDB(process.env.DATABASE_URL, process.env.DATABASE_PASSWORD)
 
+app.get('/health', (req,res)=>{
+    res.statusCode = 200
+    res.send('healthy')
+})
+
 //Register Middleware
 app.use(authorizeRequest)
 
