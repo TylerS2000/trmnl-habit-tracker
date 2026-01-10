@@ -1,12 +1,38 @@
-import {createClient} from '@supabase/supabase-js';
-import { Database } from './database.types';
-export default async function initDbConnectionAndGrabData(){
-    const supabaseKey = process.env.DATABASE_PASSWORD;
-    const supabaseUrl = process.env.DATABASE_URL;
-    const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Database } from './types/database.types';
 
-    const { data, error } = await supabase
-    .from('Habit Data')
-    .select()
-    return data || error
+export class supabaseDB {
+    supabaseUrl: string;ß
+    supabaseKey: string;
+    supabaseClient: SupabaseClient;
+
+    constructor(supabaseUrl:string, supabaseKey:string) {
+        this.supabaseKey = supabaseKey;
+        this.supabaseUrl = supabaseUrl
+
+        this.supabaseClient = createClient<Database>(this.supabaseUrl, this.supabaseKey);
+    }
+
+    async grabAllHabitData() {
+        try {
+            const data = await this.supabaseClient
+                .from('Habit Data')
+                .select()
+            return data
+        } catch (e) {
+            throw e
+        }
+    }
+    async grabHabitDataById(id) {
+        try {
+            const data = await this.supabaseClient
+                .from('Habit Data')
+                .select('dates')
+                .eq('id', id)
+            return data
+        } catch (e) {
+            throw e
+        }
+    }
+
 }
