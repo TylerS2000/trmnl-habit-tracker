@@ -6,33 +6,22 @@ export class supabaseDB {
     supabaseKey: string;
     supabaseClient: SupabaseClient;
 
-    constructor(supabaseUrl:string, supabaseKey:string) {
+    constructor(supabaseUrl: string, supabaseKey: string) {
         this.supabaseKey = supabaseKey;
         this.supabaseUrl = supabaseUrl
 
         this.supabaseClient = createClient<Database>(this.supabaseUrl, this.supabaseKey);
     }
 
-    async grabAllHabitData() {
-        try {
-            const data = await this.supabaseClient
-                .from('Habit Data')
-                .select()
-            return data
-        } catch (e) {
-            throw e
-        }
+    async fetchProfileAndAllData(user_id) {
+        return await this.supabaseClient.from("Habits")
+            .select(`
+                    id,
+                    name,
+                    "Habit Dates" (
+                    completed_at
+                    )
+                `)
+            .eq('user_id', user_id)
     }
-    async grabHabitDataById(id) {
-        try {
-            const data = await this.supabaseClient
-                .from('Habit Data')
-                .select('dates')
-                .eq('id', id)
-            return data
-        } catch (e) {
-            throw e
-        }
-    }
-
 }
