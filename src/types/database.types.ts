@@ -14,21 +14,73 @@ export type Database = {
   }
   public: {
     Tables: {
-      "Habit Data": {
+      "Habit Dates": {
+        Row: {
+          completed_at: string | null
+          habit_id: string
+          id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          habit_id?: string
+          id?: string
+        }
+        Update: {
+          completed_at?: string | null
+          habit_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Habit Dates_habit_id_fkey"
+            columns: ["habit_id"]
+            isOneToOne: false
+            referencedRelation: "Habits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Habits: {
         Row: {
           created_at: string
-          dates: string[]
-          id: number
+          id: string
+          name: string
+          user_id: string
         }
         Insert: {
           created_at?: string
-          dates: string[]
-          id?: number
+          id?: string
+          name: string
+          user_id: string
         }
         Update: {
           created_at?: string
-          dates?: string[]
-          id?: number
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Habits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "Profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Profiles: {
+        Row: {
+          email: string
+          id: string
+        }
+        Insert: {
+          email: string
+          id?: string
+        }
+        Update: {
+          email?: string
+          id?: string
         }
         Relationships: []
       }
