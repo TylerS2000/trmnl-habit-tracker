@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/TylerS2000/trmnl-habit-tracker/issues"
   },
-  "scripts":{
+  "scripts": {
     "build": "npx tsc",
     "serve": "node dist/index.js",
     "dev": "node --env-file=.env dist/index.js"
@@ -22,10 +22,13 @@
   "homepage": "https://github.com/TylerS2000/trmnl-habit-tracker#readme",
   "devDependencies": {
     "@types/express": "^4.17.1",
+    "supabase": "^2.72.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "@supabase/supabase-js": "^2.89.0",
+    "express": "^4.17.1",
+    "postgres": "^3.4.8"
   }
 }
