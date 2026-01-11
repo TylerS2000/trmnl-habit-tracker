@@ -24,7 +24,7 @@ app.get('/:id', async (req, res) => {
         res.send("Error")
     }
     res.send(
-        data
+        {data}
     )
 })
 
