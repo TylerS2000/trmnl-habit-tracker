@@ -24,4 +24,20 @@ export class supabaseDB {
                 `)
             .eq('user_id', user_id)
     }
+
+    async uploadNewHabit(user_id: string, habitName: string) {
+        const { data, error } = await this.supabaseClient
+            .from("Habits")
+            .insert([
+                {
+                    user_id: user_id,
+                    name: habitName
+                }
+            ])
+            .select() // Returns the created habit object
+            .single(); // Returns as an object instead of an array
+
+        if (error) throw error;
+        return data;
+    }
 }
