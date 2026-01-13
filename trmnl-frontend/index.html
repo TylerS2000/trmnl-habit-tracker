@@ -1,0 +1,68 @@
+<div id="globalHabitsContainer">
+</div>
+<div>{{trmnl.plugin_settings.instance_name}}</div>
+<script>
+  const globalHabitsContainer = document.getElementById("globalHabitsContainer");
+
+  let habitArray = {{data | json}}
+
+  habitArray.forEach((habit)=>{
+    //create div to house label and squares
+    const habitDiv = document.createElement("div");
+    habitDiv.classList+="habitSquaresContainer";
+
+
+    //date
+    const currentDate = new Date()
+    const millisecondsInADay = 1000 * 60 * 60 * 24
+
+
+    const completedDates = new Set(
+      habit["Habit Dates"].map(d => {
+        const [year, month, day] = d.completed_at.split('-').map(Number);
+        return `${year}-${month}-${day}`;
+      })
+    );
+    console.log(completedDates);
+    //populate squares
+    for(let i=0; i<30; i++){
+      const square = document.createElement('div');
+      const squareDate = new Date(currentDate.getTime() - (millisecondsInADay*i));
+      const dateFormatInDataTable = `${squareDate.getFullYear()}-${squareDate.getMonth()+1}-${squareDate.getDate()}`
+
+      if(completedDates.has(dateFormatInDataTable)){
+        square.classList += "bg--gray-45 "
+      }
+      square.classList += "habitSquare"
+      habitDiv.prepend(square)
+    }
+    //create label for habit
+    const habitDivLabel = document.createElement("p");
+    habitDivLabel.innerText = habit.name+":"
+    habitDiv.prepend(habitDivLabel);
+
+    globalHabitsContainer.appendChild(habitDiv)
+  })
+
+
+</script>
+<style>
+  .habitSquaresContainer{
+    display:flex; 
+    flex-direction:row; 
+    flex-wrap:wrap; 
+    height:10%;
+    justify-content: space-between;
+    margin: 20px
+  }
+  .habitSquare{
+    border-style:solid; 
+    width:20px;
+    height:20px;
+    border-radius:5px;
+    border-width:1px
+  }
+  .filledIn{
+     background-color: grey
+  }
+</style>
