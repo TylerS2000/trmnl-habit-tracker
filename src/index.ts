@@ -28,6 +28,19 @@ app.get('/:id', async (req, res) => {
     )
 })
 
+app.post('/:id/:habitName', async (req, res) => {
+
+    const { data, error } = await dbClient.uploadNewHabit(req.params.id, req.params.habitName)
+    if (error) {
+        console.error("Error inserting new habit", error)
+        res.send("Error")
+    }
+    res.send(
+        {data}
+    )
+})
+
+
 //Listen for Requests
 app.listen(port, () => {
     return console.log(`Listening on port ${port}`)
