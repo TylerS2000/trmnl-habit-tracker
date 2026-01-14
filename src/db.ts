@@ -40,4 +40,42 @@ export class supabaseDB {
         if (error) throw error;
         return data;
     }
+
+    async logHabitCompletion(habit_id: number, completed_at?: string) {
+    // If no date is provided, default to the current timestamp
+    const dateToLog = completed_at || new Date().toISOString();
+
+    const { data, error } = await this.supabaseClient
+        .from("Habit Dates")
+        .insert([
+            { 
+                habit_id: habit_id, 
+                completed_at: dateToLog 
+            }
+        ])
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Error logging habit completion:", error.message);
+        throw error;
+    }
+
+    return data;
+}
+
+    async findHabitIdByName(user_id, habit_name){
+        const { data, error } = await this.supabaseClient
+            .from("Habits")
+            .select("id")
+            .eq("user_id", user_id)
+            .eq("name", habit_name)
+        
+        if(error){
+            console.error("Error finding habit with that name the queried user")
+            throw error;
+        }
+        
+        return data;
+    }
 }
