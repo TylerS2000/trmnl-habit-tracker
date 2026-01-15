@@ -60,7 +60,7 @@ app.post('/:id/log-habit', async (req, res) => {
             throw error
         }
 
-        res.send(200);
+        res.sendStatus(200);
 
 
 
