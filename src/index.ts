@@ -17,57 +17,48 @@ app.use(authorizeRequest)
 
 app.use(express.json());
 
-
 //Register Endpoints
 app.get('/:id', async (req, res) => {
-
-    const { data, error } = await dbClient.fetchProfileAndAllData(req.params.id)
-    if (error) {
-        console.error("Error fetching data", error)
-        res.send("Error")
+    try {
+        const result = await dbClient.fetchProfileAndAllData(req.params.id)
+        return res.status(200).json(result.data)
+    } catch (error){ 
+        return res.status(500).json({error: "Internal server error"})
     }
-    res.send(
-        { data }
-    )
 })
 
 app.post('/:id', async (req, res) => {
-
-    const { data, error } = await dbClient.uploadNewHabit(req.params.id, req.body.habitName)
-    if (error) {
+    try {
+        const result = await dbClient.uploadNewHabit(req.params.id, req.body.habitName);
+        return res.status(result.status).json(result.data || result.error);
+    } catch (error) {
         console.error("Error inserting new habit", error)
-        res.send("Error")
+        return res.status(500).json({ error: "Internal server error" });
     }
-    res.send(
-        { data }
-    )
 })
 
 app.post('/:id/log-habit', async (req, res) => {
     try {
+        const body = req.body
         const userId = req.params.id;
-        const habitName = req.body.habitName;
+        const habitName = body.habitName;
+        const completed_at = body.dateCompleted;
 
         const habit = await dbClient.findHabitIdByName(userId, habitName);
 
         if (!habit) {
             return res.status(404).json({ error: "Habit not found for this user." });
         }
+        //Todo: handle for if there are multiple habits with the same name
+        const result = await dbClient.logHabitCompletion(habit.id, completed_at)
 
-        const {success, error} = await dbClient.logHabitCompletion(habit[0].id)
-        
-        if(error){
-            throw error
-        }
-
-        res.sendStatus(200);
-
-
-
+        return res.status(200).json(result.data);
     } catch (err) {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: err.message || "Internal server error" });
     }
 });
+
+
 
 //Listen for Requests
 app.listen(port, () => {

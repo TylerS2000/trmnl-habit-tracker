@@ -26,56 +26,56 @@ export class supabaseDB {
     }
 
     async uploadNewHabit(user_id: string, habitName: string) {
-        const { data, error } = await this.supabaseClient
-            .from("Habits")
-            .insert([
-                {
-                    user_id: user_id,
-                    name: habitName
-                }
-            ])
-            .select() // Returns the created habit object
-            .single(); // Returns as an object instead of an array
-
-        if (error) throw error;
+        let data;
+            data = await this.supabaseClient
+                .from("Habits")
+                .insert([
+                    {
+                        user_id: user_id,
+                        name: habitName
+                    }
+                ])
+                .select() // Returns the created habit object
+                .single(); // Returns as an object instead of an array
         return data;
     }
 
     async logHabitCompletion(habit_id: number, completed_at?: string) {
-    // If no date is provided, default to the current timestamp
-    const dateToLog = completed_at || new Date().toISOString();
+        // If no date is provided, default to the current timestamp
+        const dateToLog = completed_at || new Date().toISOString();
+        let data;
+        try {
+            data = await this.supabaseClient
+                .from("Habit Dates")
+                .insert([
+                    {
+                        habit_id: habit_id,
+                        completed_at: dateToLog
+                    }
+                ])
+                .select()
+                .single();
+        } catch (error) {
+            console.error("Error logging habit completion:", error.message);
+        }
 
-    const { data, error } = await this.supabaseClient
-        .from("Habit Dates")
-        .insert([
-            { 
-                habit_id: habit_id, 
-                completed_at: dateToLog 
-            }
-        ])
-        .select()
-        .single();
 
-    if (error) {
-        console.error("Error logging habit completion:", error.message);
-        throw error;
+        return data;
     }
 
-    return data;
-}
-
-    async findHabitIdByName(user_id, habit_name){
+    async findHabitIdByName(user_id, habit_name) {
         const { data, error } = await this.supabaseClient
             .from("Habits")
             .select("id")
             .eq("user_id", user_id)
             .eq("name", habit_name)
-        
-        if(error){
+            .single()
+
+        if (error) {
             console.error("Error finding habit with that name the queried user")
             throw error;
         }
-        
+
         return data;
     }
 }
